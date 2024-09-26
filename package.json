@@ -1,0 +1,23 @@
+{
+  "name": "Tabela Fipe Spider",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "live": "nodemon src/server.js",
+    "test": "jest"
+  },
+  "author": "Camilo Labella Munhoz",
+  "license": "GNU",
+  "description": "",
+  "dependencies": {
+    "axios": "^1.7.7",
+    "express": "^4.21.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.25.6",
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.4",
+    "jest": "^29.7.0"
+  }
+}

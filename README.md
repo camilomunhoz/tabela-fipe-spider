@@ -1,2 +1,2 @@
-# tabela-fipe-spider
-Consulte e extraia tabelas Fipe de preço médio de veículos
+# Tabela Fipe Spider
+Web Crawler para extração de tabelas Fipe.
