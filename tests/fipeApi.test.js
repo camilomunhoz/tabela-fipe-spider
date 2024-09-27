@@ -25,16 +25,12 @@ describe('Teste dos endpoints da API da Fipe', () => {
     
     test('deve retornar as marcas no formato correto', async () => {
         const data = await getMarcas(tabela_id, tipo_id)
-        expect(data).toBeInstanceOf(Object)
-        expect(Number.isInteger(parseInt(Object.keys(data)[0]))).toBeTruthy()
-        expect(typeof Object.values(data)[0] === 'string').toBeTruthy()
+        validateObject(data)
     });
     
     test('deve retornar os modelos de uma marca no formato correto', async () => {
         const data = await getModelos(tabela_id, tipo_id, marca_id)        
-        expect(data).toBeInstanceOf(Object)
-        expect(Number.isInteger(parseInt(Object.keys(data)[0]))).toBeTruthy()
-        expect(typeof Object.values(data)[0] === 'string').toBeTruthy()
+        validateObject(data)
     });
     
     test('deve retornar os anos de um modelo corretamente', async () => {
@@ -52,3 +48,14 @@ describe('Teste dos endpoints da API da Fipe', () => {
     });
 
 })
+
+/**
+ * Verifica se o objeto cumpre o formato chave-valor
+ * onde a chave é int e o valor é string.
+ */
+export function validateObject(obj) {
+    expect(obj).toBeInstanceOf(Object)
+    expect(obj).not.toBeNull()
+    expect(Number.isInteger(parseInt(Object.keys(obj)[0]))).toBeTruthy()
+    expect(typeof Object.values(obj)[0] === 'string').toBeTruthy()
+}
