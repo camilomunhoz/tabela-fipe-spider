@@ -66,7 +66,7 @@ const payload = {
 }
 
 async function seizeFromFipe(endpoint, payload) {
-    return await new Promise((resolve) => {
+    return await new Promise((resolve, reject) => {
         axios.post(endpoint, payload, {
             headers: {
                 'Accept': 'application/json, text/javascript, */*; q=0.01',
@@ -75,15 +75,18 @@ async function seizeFromFipe(endpoint, payload) {
                 'Accept-Language': 'pt-br',
                 'X-Requested-With': 'XMLHttpRequest'
             },
-        }).done(data => resolve(data))
+        })
+        .then(response => resolve(response.data))
+        .catch(error => reject(error))
     })
 }
 
 /**
  * Transforma retornos da API em um único objeto.
  * 
- * Retornos da API frequentemente vêm em múltiplos objetos:
+ * Alguns endpoints retornam dados em um array de múltiplos objetos:
  *    [{Label:<>, Value:<>}, ...]
+ * ao invés de somente um objeto: {key: <value>, ...}
  */
 function response2object(response) {
     if (Array.isArray(response)) {
@@ -94,18 +97,16 @@ function response2object(response) {
     }
 }
 
-async function getTabelaPorMesAno(mes, ano) {
-    let tabelas = await getTabelas()
-
-    // dinamicamente transforma o número do mês nele por extenso
-    mes = new Intl.DateTimeFormat('pt-BR', { month: 'long' }).format(new Date(2000, mes - 1, 1));
+export function getTabelaPorMesAno(mes, ano, tabelas) {
+    // identifica dinamicamente o mês por extenso, convenção da Fipe
+    mes = new Intl.DateTimeFormat('pt-BR', { month: 'long' }).format(new Date(2000, mes - 1, 1))
     
     return tabelas.find((tabela) => {
         return tabela.Mes.trim() === `${mes}/${ano}`
     }).Codigo
 }
 
-/* --------------------------------- getters -------------------------------- */
+/* ------------------------------- API reachers ------------------------------ */
 
 export async function getTabelas() {
     let response = await seizeFromFipe(endpoints.tabelas)
@@ -144,10 +145,10 @@ export async function getAnosModelo(tabela_id, tipo_id, marca_id, modelo_id) {
     return response2object(response)
 }
 
-export async function getInfosModelo(tabela_id, tipo_id, marca_id, modelo_id, anoModelo) {
+export async function getInfosModelo(tabela_id, tipo_id, marca_id, modelo_id, anoModelo, combustivel_id) {
     let response = await seizeFromFipe(
         endpoints.infosModelo,
-        payload.infosModelo(tabela_id, tipo_id, marca_id, modelo_id, anoModelo)
+        payload.infosModelo(tabela_id, tipo_id, marca_id, modelo_id, anoModelo, combustivel_id)
     )
     return response
 }

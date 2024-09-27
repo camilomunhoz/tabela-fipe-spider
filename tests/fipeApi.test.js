@@ -1,4 +1,3 @@
-import { describe } from 'node:test';
 import {
     getTabelas, getMarcas, getModelos,
     getAnosModelo, getInfosModelo
@@ -17,24 +16,39 @@ describe('Teste dos endpoints da API da Fipe', () => {
         combustivel_id = 1
     })
     
-    test('deve retornar as tabelas', async () => {
-        await expect(getTabelas()).resolves.toBe('object');
+    test('deve retornar as tabelas no formato correto', async () => {
+        const data = await getTabelas()
+        expect(data).toBeInstanceOf(Object)
+        expect(data[0]).toHaveProperty('Codigo');
+        expect(data[0]).toHaveProperty('Mes');
     });
     
-    test('deve retornar as marcas', async () => {
-        // await expect(getMarcas(tipo_id, marca_id)).resolves.toBe('object');
+    test('deve retornar as marcas no formato correto', async () => {
+        const data = await getMarcas(tabela_id, tipo_id)
+        expect(data).toBeInstanceOf(Object)
+        expect(Number.isInteger(parseInt(Object.keys(data)[0]))).toBeTruthy()
+        expect(typeof Object.values(data)[0] === 'string').toBeTruthy()
     });
     
-    test('deve retornar os modelos de uma marca', async () => {
-        // await expect(getModelos(tipo_id, marca_id, modelo_id)).resolves.toBe('object');
+    test('deve retornar os modelos de uma marca no formato correto', async () => {
+        const data = await getModelos(tabela_id, tipo_id, marca_id)        
+        expect(data).toBeInstanceOf(Object)
+        expect(Number.isInteger(parseInt(Object.keys(data)[0]))).toBeTruthy()
+        expect(typeof Object.values(data)[0] === 'string').toBeTruthy()
     });
     
-    test('deve retornar as marcas', async () => {
-        // await expect(getAnosModelo(tipo_id, marca_id, modelo_id, anoModelo)).resolves.toBe('object');
+    test('deve retornar os anos de um modelo corretamente', async () => {
+        const data = await getAnosModelo(tabela_id, tipo_id, marca_id, modelo_id)
+        expect(typeof Object.keys(data)[0] === 'string').toBeTruthy()
+        expect(typeof Object.values(data)[0] === 'string').toBeTruthy()
+
     });
     
-    test('deve retornar as marcas', async () => {
-        // await expect(getInfosModelo(tipo_id, marca_id, modelo_id, anoModelo, combustivel_id)).resolves.toBe('object');
+    test('deve retornar todas as infos de um modelo no formato correto', async () => {
+        const data = await getInfosModelo(tabela_id, tipo_id, marca_id, modelo_id, anoModelo, combustivel_id)
+        expect(data).toBeInstanceOf(Object)
+        expect(data).toHaveProperty('Valor');
+        expect(data).toHaveProperty('CodigoFipe');
     });
 
 })
